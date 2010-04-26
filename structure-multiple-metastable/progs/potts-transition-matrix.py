@@ -282,11 +282,7 @@ def output_C(i):
             #outfile.write("%g\t%g\t%g\t%g\n" %( j[0], j[1], j[2], k) )
 
 
-def output_file(filename, data):
-    '''Output to filename the array data'''
-    
-    outfile = open(filename, "w")
-    
+def output_header(outfile):
     outfile.write("# q: %d\n" % q)
     outfile.write("# size: %d x %d\n" % (Lx, Ly))
     
@@ -304,8 +300,31 @@ def output_file(filename, data):
         outfile.write("\n")
         
     outfile.write("#\n# data: \n#\n")
-    for i in data:
-        outfile.write("%g\n" % i)
+    
+
+def output_file(filename, data):
+    '''Output to filename the array data'''
+    
+    outfile = open(filename, "w")
+    print "# Writing to file ", filename
+    
+    output_header(outfile)
+
+    
+    if reduced:
+        for j, mag in enumerate(magnetisation_list):
+            for k in mag:
+                outfile.write("%g\t" % k)
+            outfile.write("%g\n" % data[representative_list[j] ] )
+            #outfile.write("%g\t%g\t%g\t%g\n" %( mag[0], mag[1], mag[2], C[i, representative_list[j]]) )
+    else:
+        for mag, j in zip(magnetisation_list, data):
+            for k in mag:
+                outfile.write("%g\t" % k)
+            outfile.write("%g\n" % j)
+    
+    #for i in data:
+        #outfile.write("%g\n" % i)
     
     
     
@@ -323,7 +342,16 @@ def output(base_filename, num):
         if i>0:
             output_file(base_filename+"_C"+str(i)+".dat", C[i])
             
-        output_file(base_filename+"_evals.dat", evals)
+        
+    
+    outfile = open(base_filename+"_evals.dat", "w")
+    output_header(outfile)
+    
+    outfile.write("%s" % str(evals) )
+    #for i in evals:
+        #outfile.write("%g\t" % i)
+    
+    #output_file(base_filename+"_evals.dat", evals)
     
 
 
