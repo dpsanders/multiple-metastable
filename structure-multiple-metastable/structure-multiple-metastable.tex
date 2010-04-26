@@ -1,0 +1,1644 @@
+\documentclass[10pt]{article}
+
+% \documentclass[final,prl,twocolumn]{revtex4}
+
+\usepackage[intlimits]{amsmath}
+\usepackage{amsfonts, amssymb, amsthm}
+
+\usepackage{cite}
+
+\usepackage{graphicx}
+\usepackage{subfigure}
+% \usepackage{mathptmx}
+\usepackage{mathpazo}
+
+% \usepackage{pdfsync}
+
+\usepackage{color}
+
+\newcommand{\Cuernavaca}{Instituto de Ciencias
+F\'{\i}sicas, Universidad Nacional Aut\'onoma de M\'exico, Apartado postal 48-3,
+C.P.\ 62551, Cuernavaca,
+Morelos, Mexico}
+
+\newcommand{\h}{\mathbf{h}}
+% \newcommand{\J}[2]{J_{#1 #2}}
+\newcommand{\J}[2]{J(#1, #2)}
+
+
+%\renewcommand{\L}{\Lambda}
+
+\renewcommand{\ss}{\mathbf{\sigma}}
+\newcommand{\s}{\sigma}
+
+\newcommand{\bfigref}[1]{Figure~\ref{#1}}
+\newcommand{\fBW}{f_{\text{BW}}}
+
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\subfig}[2][1]{\subfigure[]{\includegraphics[scale=#1]{#2}}}
+
+\newcommand{\scalefig}[2]{\includegraphics*[scale=#1]{#2}}
+\newcommand{\defeq}{:=}
+\newcommand{\eqdef}{=:}
+
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\w}{\mathbf{w}}
+
+\renewcommand{\v}[1]{v(#1)} 
+% \renewcommand{\v}[1]{v_{#1}} 
+
+% \newcommand{\tP}{\mathsf{P}}
+\newcommand{\tP}{\tilde{P}}
+
+\newcommand{\Order}[1]{\mathcal{O}(#1)}
+
+\newcommand{\zeros}{\mathbf{0}}
+\newcommand{\ones}{\mathbf{1}}
+\newcommand{\twos}{\mathbf{2}}
+
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\equivclass}[1]{\left[ #1 \right]}
+
+\newcommand{\LL}{\mathsf{L}}
+\renewcommand{\SS}{\mathsf{S}}
+\newcommand{\tL}{\tilde{\LL}}
+\newcommand{\tS}{\tilde{\SS}}
+\newcommand{\tv}{\tilde{v}}
+\newcommand{\tvv}{\tilde{\vv}}
+\newcommand{\tw}{\tilde{\w}}
+
+% \renewcommand{\L}[2]{L(#1,#2)}
+\renewcommand{\L}[2]{L_{#2 \to #1}}  % alternative, less clear
+
+\newcommand{\size}[1]{\left| #1 \right|}
+
+\newcommand{\class}{\mathcal{C}}
+\newcommand{\ts}{\tilde{\sigma}}
+\newcommand{\tG}{\tilde{G}}
+
+% \newcommand{\p}{\mathbf{p}}
+\newcommand{\p}{p}
+
+%\newcommand{\transp}{^{\mathsf{\small{T}}}}
+\newcommand{\transp}{^{\text{\small T}}}
+
+\newcommand{\Peq}{P_0}
+
+\newcommand{\given}{\, | \,}
+
+\newcommand{\M}[1]{M^{(#1)}}
+
+ \renewcommand{\ss}{\sigma}
+ \renewcommand{\s}{\sigma}
+
+\newcommand{\ip}[2]{\langle #1, #2 \rangle}
+
+
+\graphicspath{ {figs/} }
+
+\usepackage[margin=1.2in]{geometry}
+
+\setlength{\parskip}{10pt}
+
+% \graphicspath{{figs/}}
+\graphicspath{{progs/}}
+
+\newcommand{\comment}[1]{{\color{red}#1}}
+
+
+%opening
+%\title{Understanding metastability using small spin models}
+% \title{Structure of metastable states in small spin systems}
+\title{\vspace*{-60pt}Structure of multiple metastable states}
+\author{David P.~Sanders, Fran\c{c}ois Leyvraz and Hern\'an Larralde}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+We describe and explain the structure of multiple metastable states in generalised Potts-type 
+spin models by numerical diagonalisation of the transition matrices 
+describing their stochastic dynamics in small systems.
+By comparison of the numerical and analytical results, 
+we
+exhibit the detailed structure of single and multiple metastable states in such
+models.
+This is accomplished by relating this structure to the slow-decaying
+eigenvectors of the transition matrix, confirming and extending recent
+theoretical results.
+% We also show how the computational burden can be significantly reduced by
+% using
+% a simple symmetry reduction, allowing us to obtain the complete eigenvectors
+% for
+% kinetic Ising models
+% on a square lattice of size $7\times 4$. 
+% 
+% We study metastability in small spin systems with discrete-time dynamics which
+% exhibit metastabilty, by numerically diagonalising the complete Markov
+% transition matrix.  from
+% REF which relate metastability to the properties of eigenvectors corresponding
+% to eigenvalues of the transition matrix lying close to $1$.
+
+\end{abstract}
+
+% \maketitle
+
+Metastable states play an important role in many systems, including chemical
+reactions \cite{WalesBook}, glasses \cite{DebenedettiBook} and protein folding
+REF.
+Simple models have been used to gain insight into the behaviour of metastable
+states from a theoretical viewpoint;  in particular, Ising-type spin models with
+stochastic dynamics have been extensively studied,
+both numerically \cite{RikvoldLifetimes1994} and rigorously
+\cite{NevesSchonmannCMP}.
+
+A general theory of metastability has long been
+sought \cite{PenroseLebowitz1971}, but only recently have formalisms been
+established which successfully relate the basic properties
+of metastable states in Markov processes describing
+the dynamics of spin models to their eigenvalues and eigenvectors \cite{GaveauSchulmanJMP1998}. 
+Gaveau \& Schulman  \cite{GaveauSchulmanJMP1998} established results relating
+the spectral structure (eigenvalues and eigenvectors) of the transition matrix
+describing the stochastic dynamics to the properties of metastable states
+% \cite{GaveauSchulmanJMP1998,SchulmanCoarseGrainsFoundPhys2001,
+\cite{GaveauSchulmanMultiplePhasesPRE2006}. 
+We indepently established a closely-related approach, and were able to obtain
+more refined results
+% were taken up and refined by us
+\cite{LarraldeLeyvraz2005, LarraldeLeyvrazSandersJStatMech2006}. A related
+perspective is that of Bovier et al.\ \cite{BovierCMP2002}.
+
+
+While systems with single metastable states have received much attention, there
+has been comparatively little work on multiple metastable states, which are,
+however, crucial for the description of physical phenomena such as the Ostwald
+step rule \cite{Ostwald1897} and serial and competitive nucleation
+\cite{PoonEvansColloidPolymerTripleCoexPRL1999,
+PoonEvansClassificationOrderingKinetics3PhasePRE2001}.
+
+In previous work on the structure of metastable states, principally artificial models made by constructing small
+matrices with the desired properties have been studied
+\cite{GaveauLesneSchulmanSpectralSignaturesHierarchicalRelaxationPLA1999,
+GaveauSchulmanMultiplePhasesPRE2006}, and 
+the so-called ``observable representation''
+\cite{GaveauSchulmanMultiplePhasesPRE2006,
+GaveauSchulmanImagingGeomThroughDynObsRepnJPA2006,
+SchulmanMeanFieldSpinGlassObsRepnPRL2007} has been exploited; although this is
+related to our approach, the emphasis here is different.  
+
+
+Simple Ising-type models with three spin types capable of exhibiting two 
+metastable phases were discussed in
+\cite{RikvoldNovotnyCompetingMetastablePRE1994,
+CirilloOlivieriMetastableBlumeCapel1996}, but it was only recently that the
+present authors introduced a general Potts-type spin model which can be tuned
+to have any number of metastable phases, with basically arbitrary decay pathways
+between them \cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007}.
+
+
+In this paper, we use the model described in \cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007} to investigate and describe analytically and numerically the 
+structure of multiple metastable states. We verify and refine the results on
+the structure of these states in \cite{LarraldeLeyvrazSandersJStatMech2006}.
+
+Our approach is two-fold: we give simple arguments which establish the
+overall gross structure of the multiple metastable states, and 
+ we numerically diagonalise the complete transition matrix of the
+system to determine their fine structure. Such an approach has previously been
+used to study the dynamics of
+small spin systems in e.g.\ refs.~
+\cite{NightingaleComputationDominantEigenvaluesEigenvectorsPRB1993,
+NightingaleCorrelationTimesCriticalityPRB2000,
+StinchcombeNucleationtimesKineticIsingPRE2005,
+SchulmanMeanFieldSpinGlassObsRepnPRL2007}. As far as we are aware, however, it
+has not been used to study multiple metastability.  Such an approach is
+restricted to very small system sizes. More coarse-grained approaches, allowing
+larger systems, have been studied in REF Rikvold, Toral.
+
+We will not repeat the theoretical discussion of
+\cite{LarraldeLeyvrazSandersJStatMech2006}; rather we try here to simplify the
+discussion in order to focus on the key points.
+
+Comment on our definition of metastability and the difference from Schuette et
+al. (Theirs is \emph{multistability}; there is no particular inherent difference in
+the ``stability'' of different states, but there are still (free) energy 
+barriers to surmount between them.)
+
+% \section{Introduction}
+% What is not new: the idea of numerically diagonalising the matrices, e.g.
+% Gaveau % + Schulman, Stinchcombe,
+% R Melin ``Glauber dynamics'' 1996 J Phys France. Hontinfinde EJPB 2000 kinetic
+% BC competing dynamics.
+
+% What is new: (i) application of symmetry reduction to dramatically reduce the
+% computational effort, and allow the use of larger small systems; (ii)
+% application to a model with several metastable states and comparison with
+% theory; (iii) detailed examination of eigenstates, and hence \emph{structure}
+% of % metastable states.
+
+% Is it possible to remove some of the microstates from the calculation -- i.e.
+% those which hardly contribute, such as antiferro states?
+% Is it possible to remove most of the states with $M$ close to its equilibrium
+% value?  But in any case the majority are concentrated near $M=0$, so it's not
+% clear that this would help.  In the case of large $h$ and low $T$, so that the
+% nucleating droplet is of the order of a couple of spins, should even be able
+% to % cut off with slightly larger clusters, thereby drastically reducing the
+% effort?	
+% 
+% Previous work:
+% Nightingale \& Bl\"ote investigated
+% \cite{NightingaleComputationDominantEigenvaluesEigenvectorsPRB1993}
+% \cite{NightingaleCorrelationTimesCriticalityPRB2000}
+% critical slowing down with a similar symmetry reduction
+% (without giving details?), extended with spin-flip symmetry, which does not
+% apply for metastability.  Note that they prefer a conjugate gradient method,
+% rather than Lanczos-type methods, and found  that CG was faster
+% \cite{NightingaleComputationDominantEigenvaluesEigenvectorsPRB1993}.  We used
+% an
+% efficient implicitly-restarted Lanczos method, as implemented in the ARPACK
+% package.
+% Lundow [2001 and to be published] discussed a similar symmetry reduction for
+% transfer matrices. 
+% Gaveau \& Schulman did explicitly [2003? Found Phys] 1D Ising.
+
+% We do for apparently the first time an explicit model with multiple
+% metastability, and Kawasaki?  (Though maybe GS did that.)
+% Stinchcombe's results could presumably be greatly sppeded up.
+
+% Include discussion of very slow decay if have competing phases with slightly
+% different $h$ (or even the same $h$) -- very long time-scale corresponding to
+% flipping from one of the states to another within eqm.
+% 
+% In \, we developed a formalism, closely related to that of G+S
+% 1998, which describes metastable states in Markov processes with a finite
+% number % of states, in terms of eigenvalues and eigenvectors of the Markov
+% transition % matrix.  We tested this description for relatively large systems
+% ($32\times32$ % spins) in [2006], but only in a coarse-grained way.  In this
+% paper, we study % very small systems, for which we are able to obtain complete
+% information on the % relevant eigenvalues and eigenvectors by numerical
+% diagonalisation of the % transition matrix, in order to subject the theory of
+% [2005,6] to a more % stringent test.  In particular, we also consider the case
+% of systems with % multiple metastable states [2006, G+S 1998,2006], using a
+% generalised Potts % model that we have recently developed, which can easily be
+% tuned to have any % number of metastable states and transitions between them. 
+% Previously, studies % of multiple metastable phases by G+S were restricted to
+% small matrices % constructed explicitly with the correct structure.
+
+\section{Theoretical framework}
+
+\subsection{Formalism}
+
+We consider a finite number $N$ of spins $\sigma_i$ located at the
+vertices of a lattice, here taken to be a two-dimensional square lattice.  The
+dynamics of the system is described by a discrete-time Markov chain, as follows: let $p_t(\sigma)$ be the probability that the system is in the microscopic configuration (``state'' ) $\sigma$ at time $t$.
+Then the dynamics is given by the
+master equation
+\begin{equation}
+p_{t+1}(\tau) = \sum_{\sigma} \L{\tau}{\sigma} p_t(\sigma), 
+\end{equation}
+where $L(\tau, \sigma) \defeq \L{\tau}{\sigma}$ is the transition probability to go from $\tau$ 
+to $\sigma$ in a single time step.  Here we use a discrete-time version of 
+the development in ref.~\cite{LarraldeLeyvrazSandersJStatMech2006}, which corresponds more closely to the numerical simulations.
+This can be rewritten in terms of an evolution operator $\LL$ on the space $\Omega$ of all microscopic configurations
+and the vector $\p_t$ as
+% In terms of column
+% vectors $\p_t$, this becomes
+\begin{equation}
+ \p_{t+1} = \LL \p_t.
+\end{equation}
+% where $\LL\transp$ denotes the transpose of the matrix $\LL$.
+
+In this paper, we restrict attention to Markov dynamics which satisfy
+\emph{detailed balance} with respect to an equilibrium distribution
+$\Peq(\sigma)$:
+\begin{equation}
+ \Peq(\sigma) \L{\tau}{\sigma} =  \Peq(\tau) \L{\sigma}{\tau},
+\end{equation}
+although we expect that the results can be extended to situations where this does not hold 
+\cite{GaveauSchulmanJMP1998}.
+In this case, assuming that the Markov process is irreducible and ergodic, the
+probability distribution $p_t$ at time $t$ converges to the equilibrium distribution
+$\Peq$
+as $t \to \infty$.
+%  i.e.\ $P_t(\sigma) \to \Peq(\sigma)$.
+
+The condition of detailed balance implies that the operator $\LL$ is
+self-adjoint with respect to the inner product
+\begin{equation}
+\ip{\Phi}{\Psi} \defeq \sum_{\sigma} \frac{\Phi(\sigma)
+\Psi(\sigma)}{\Peq(\sigma)},
+\end{equation}
+REF Van Kampen , and hence that it has a complete
+set of eigenvectors $P_n$, with $n=0,\ldots,M-1$, which are orthonormal with
+respect to the inner product $\ip{\cdot}{\cdot}$, with corresponding
+eigenvalues
+$\lambda_0 > \lambda_1 \ge \cdots \ge \lambda_{M-1}$. Here, $M$ is the total
+number of configurations in the system, given by $M = q^N$ if each spin has $q$
+possible values. The Perron--Frobenius
+theorem REF then implies that $\lambda_0 = 1$ is the largest eigenvalue and
+that the corresponding
+eigenvector $P_0$ is in fact the equilibrium distribution.
+%  $\Peq$.
+
+The orthonormality of the $P_n$ implies that
+\begin{equation}
+ \ip{P_n}{P_0} = \sum_\sigma P_n(\sigma) = \delta_{n,0},
+\end{equation}
+that is, all $P_n$ with $n \neq 0$ have sum-over-states $0$.
+
+
+If we start from a specific initial condition $\sigma_0$, then
+the probability distribution at discrete time $t$ is given by
+\begin{equation}
+ \p(t; \sigma_0) = \sum_n \alpha_n(\sigma_0) \lambda_n^t P_n,
+\end{equation}
+where ???
+\begin{equation}
+ \alpha_n(\sigma_0) \defeq \ip{\delta_{\sigma_0}}{P_n} = \sum_\sigma
+\frac{\delta_{\sigma_0}(\sigma) P_n(\sigma)}{\Peq(\sigma)} =
+\frac{P_n(\sigma_0)}{\Peq(\sigma_0)}.
+\end{equation}
+Thus
+\begin{equation}
+  \p(t; \sigma_0) = P_0 + \sum_{n=1}^{M-1} \frac{P_n(\sigma_0)}{\Peq(\sigma_0)}
+\lambda_n^t P_n.
+\end{equation}
+(Note that these are vector equations: both sides are functions of $\sigma$,
+but we omit this dependence for clarity.)
+
+% \comment{Normalisation of the C's?}
+
+The coefficient $P_n(\sigma_0) / \Peq(\sigma_0)$ is key in the development, and
+we thus define
+\begin{equation}
+ C_n(\sigma) \defeq \frac{P_n(\sigma)}{\Peq(\sigma)}.
+ \label{eq:defn-C_n}
+\end{equation}
+In fact, the $C_n$ are the \emph{left} eigenvectors of $L$
+\cite{GaveauSchulmanJMP1998}.
+
+\comment{Need to discuss those particular $\sigma_0$ which give rise to the
+metastable states.}
+
+\subsection{Metastability}
+
+As has been shown in \cite{GaveauSchulmanJMP1998,LarraldeLeyvraz2005,
+GaveauSchulmanMultiplePhasesPRE2006,
+LarraldeLeyvrazSandersJStatMech2006},  metastability in models of this type
+corresponds to slowly-decaying modes, which in our discrete-time context
+corresponds to eigenvalues $\lambda_i$ which are close to $1$.
+We are thus led to consider systems in which there are $K$ slowly-decaying
+modes, with
+% Recall that the $P_i$ are eigenvectors of the discrete-time transition matrix
+% $\LL$, with eigenvalues $\lambda_i$ such 
+$1 = \lambda_0 > \lambda_1 >
+\lambda_2 > \cdots > \lambda_K \gg \lambda_{K+1}$.
+%  so that the system has one
+% equilibrium distribution $P_0$ which is invariant under $L$, and  $K$ slowly
+% decaying eigenstates.
+% The $C_i$ are defined by $C_i(\tau) \defeq P_i(\tau) / P_0(\tau)$.
+% 
+% 
+% For metastability, we assume that there are $K$ slowly-decaying modes, i.e.\
+% that
+% $1 = \lambda_0 > \lambda_1 > \cdots > \lambda_K \gg \lambda_{K+1}$.
+The timescale at which mode $k$ decays is given by 
+$T_k \defeq (1-\lambda_k)^{-1}$.
+
+Suppose the system starts with initial condition $\sigma_0$.
+For times $t$ satisfying  $T_{k+1} \ll t \ll T_k$, the system is in a
+quasi-stationary state which we denote by $\M{k} \given \sigma_0$, given by the
+distribution
+% After a short equilibration time starting from the initial condition
+% $\sigma_0$, we thus reach a quasi-stationary distribution
+\begin{equation}
+ \M{k} \given \sigma_0 \defeq P_0 + \sum_{n=1}^k C_n(\sigma_0)
+P_n
+\end{equation}
+for $k=1,\ldots,K$.  All modes higher than $k$ have decayed, but mode $k$ has
+not.
+A detailed discussion of this can be found in
+\cite{LarraldeLeyvrazSandersJStatMech2006}.
+Note that here, the superscript $k$ of $\M{k}$ corresponds to the time at which
+the state is observed.
+
+In \cite{LarraldeLeyvrazSandersJStatMech2006}, it was shown that for general initial states
+$\sigma_0$, the distributions $\M{k}$, obtained after the modes faster than the slowest $k$ have decayed,
+can be split up into linear combinations
+of the equilibrium distribution together with certain quasi-static distributions.
+These quasi-static distributions each correspond to
+a metastable state, and are given by $\M{k} \given \sigma_k$ for
+some $\sigma_k$ which, in some sense, represents the metastable state. \comment{Is this still true if the distributions
+can have two similar values in different parts of configuration space?}
+
+The main goal of this paper is to understand analytically and numerically the
+``structure'' of these metastable states, by which we mean the structure of the
+right eigenvectors $P_n$ of the transition matrix, and the functions $C_n$ (the left eigenvectors).
+In particular, we highlight the difference in structure of these eigenvectors which arises from different types of possible decay pathways between the metastable states of a system.
+An alternative, though related, point of view, called the \emph{observable representation}, has been given by Gaveau, Schulman, and collaborators \cite{GaveauSchulmanMultiplePhasesPRE2006,
+GaveauSchulmanImagingGeomThroughDynObsRepnJPA2006}. 
+
+
+% 
+% 
+% These are the quasi-stationary probability distributions reached by the
+% system
+% after times $t$ satisfying $T_{k+1} \ll t \ll T_k$, i.e.\ when all
+% modes faster than mode
+% $k$ have decayed but mode $k$ has not. 
+% This distribution thus either describes a
+% metastable state
+% or is the equilibrium distribution, by the results of
+% \cite{LarraldeLeyvrazSandersJStatMech2006}. We emphasise that the index $k$ of
+% $\M{k}$ denotes the \emph{time}
+
+
+
+\subsection{Generalised Potts model}
+
+We will consider a specific physical model in which multiple metastable states
+can be studied, namely the generalised Potts model introduced in
+\cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007}. Previously
+mainly artifical models had been used
+\cite{GaveauSchulmanMultiplePhasesPRE2006}, one exception being
+\cite{SchulmanMeanFieldSpinGlassObsRepnPRL2007}, where a mean-field spin glass
+was studied.
+
+Our model is a generalisation of the 
+Potts model \cite{Potts1952}, which in turn is an Ising-type spin model defined
+on a lattice. Each lattice site $i$ contains a spin $\sigma_i$ which can take on
+$q$ different values: $\sigma_i \in \{1,\ldots,q\}$; this $q$ will be the number
+of possible phases in the system. The energy of a configuration $\ss$ is given by the Hamiltonian 
+\begin{equation}\label{eq:hamiltonian}
+H(\ss) 	\defeq -\sum_{\langle i, j \rangle} \J{\s_i}{\s_j} -
+\sum_{\alpha=1}^q h_{\alpha} M_{\alpha}.
+\end{equation}
+Here, $M_{\alpha} \defeq \sum_{i} \delta_{\s_i,
+\alpha}$
+%$M_{\alpha}$ 
+is the number of spins (i.e.\ the ``magnetisation'') of the
+spin type $\alpha$, where 
+%given by $M_{\alpha} \defeq \sum_{i} \delta_{\s_i,
+%\alpha}$; 
+$\delta_{\alpha, \gamma}=1$ if $\alpha = \gamma$ and
+$0$ otherwise. 
+The first term describes nearest-neighbour interactions, and the second term
+gives the effect of external fields, one for each spin type \cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007}.
+
+
+The dynamics of the model is taken to be Metropolis-type spin flips
+\cite{NewmanBarkemaBook}, where a single spin is chosen at random and is
+flipped with  probability $\min\{1,
+\exp(-\beta \Delta H)\}$, where $\beta := 1/T$ is the inverse
+temperature and $\Delta H$ is the change in the value of the Hamiltonian as a
+result of the flip.
+
+
+The idea, discussed in more detail in
+\cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007}, is that we can
+design particular decay pathways by firstly giving larger values of the
+external field to phases which should be more stable, and then allowing only
+certain transitions between phases $\alpha \to \beta$ by setting those
+$\J{\alpha}{\beta}$ to be favorable (positive) and the others to be unfavorable
+(negative). Although this prescription is not very definite, it is not too
+difficult to tweak the parameters of the model to obtain different decay pathways
+between an arbitrary number of metastable phases, which all finally decay to
+equilibrium.
+
+As emphasised in \cite{LarraldeLeyvrazSandersJStatMech2006}, the interesting
+cases are those in which to reach equilibrium from a given metastable phase
+$\alpha$, the system must first pass through another metastable phase $\beta$.
+Decay pathways of this type are indeed relatively easy to construct with the model, as shown in
+\cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007}.
+
+% 
+% is a sum over nearest-neighbor pairs of
+% spins of a symmetric interaction energy
+% $\J{\alpha}{\gamma} = \J{\gamma}{\alpha}$, and the second describes
+% the effect of external fields $h_{\alpha}$ acting on spin type
+% $\alpha$.
+% en by 
+
+
+
+
+\subsection{Numerical method}
+
+For a system with $N$ spins, there are $q^N$ possible configurations of a Potts
+model with $q$ states, so that the matrix $\LL$ is of size $q^N \times
+q^N$, which is usually very large indeed.  However, the matrix is sparse,
+since for single-flip dynamics there are only $N(q-1)$ possible new configurations which are accessible 
+at each step, together with the previous configuration.
+As discussed above, the key quantities for  metastability are the
+first few eigenvalues and eigenvectors of the transition matrix $\LL$.
+
+Several numerical methods are available to find the
+necessary eigenvalues and eigenvectors for sparse matrices. Nightingale et al.\
+\cite{NightingaleComputationDominantEigenvaluesEigenvectorsPRB1993,
+NightingaleCorrelationTimesCriticalityPRB2000}
+recommend a conjugate gradient method, while Stinchcombe et al.\
+\cite{StinchcombeNucleationtimesKineticIsingPRE2005} use a Lanczos method.
+Here we use a method related to the Lanczos method, the Arnoldi method, as
+implemented in the ARPACK software package REF. This method is not restricted to
+symmetric matrices, although we use it mainly for that case, in which it
+reduces to the Lanczos method.
+
+
+% \subsubsection{Symmetric matrix}
+
+One possibility is to diagonalise the original transition matrix $\tP$ to
+obtain its eigenvectors $P_n$, and then use equation
+\eqref{eq:defn-C_n} to obtain the $C_n$, which are in fact
+left eigenvectors of $\tP$, as emphasised in
+ \cite{GaveauSchulmanJMP1998,GaveauSchulmanMultiplePhasesPRE2006}.  
+% However,
+% calculating directly the left eigenvectors loses information given by the
+% normalisation, which  was shown in
+% \cite{LarraldeLeyvraz2005,LarraldeLeyvrazSandersJStatMech2006} to be directly
+% relatable to the free energy difference between equilibrium and metastable
+% phases
+% 
+% A third possibility, and the one that we adopt, is to use a symmetrised
+% version
+% of the transition matrix.  Defining...
+Instead, we use a symmetrised version of the transition matrix, as detailed
+below, which allows us to obtain the $P_n$ and the $C_n$ in a
+single
+calculation, with the correct normalisations. This also turns out to
+allow for a wider parameter range in the numerical
+calculations, since the entries of the eigenvectors, even during the algorithm, must not fall below the
+machine epsilon, which is of the order of $10^{-16}$.
+% This 
+% We find that for numerical reasons, it is convenient to symmetrise the
+% transition matrix, as follows. 
+
+The symmetrised version  $\SS$ of the transition matrix
+% let $p_i$ be the stationary (equilibrium) probability, with respect to which the
+% transition $\LL$ 
+% matrix $L_{ij} \defeq L_{i \to j}$, giving the probability of transition from
+% microstate $i$ to microstate $j$, 
+% satisfies detailed balance, i.e.\ $p_j L_{ij}
+% = p_i L_{ji}$.
+is given by $S_{\sigma, \tau} \defeq P_{0,\sigma}^{-1/2} L_{\sigma, \tau} P_{0,\tau}^{1/2}$.
+  Then
+$S$ is a symmetric
+matrix ($S_{ij} = S_{ji}$) which represents the same operator $\LL$ in a
+different
+basis.  
+
+Since $S$ is symmetric, it is diagonalisable, with a complete set of
+eigenvectors $\tP_n$, satisfying $S \tP_n = \lambda_n \tP_n$, and the same set
+of
+eigenvalues $\lambda_n$ as $P$. Thus $\LL$ also has 
+complete set of eigenvectors $P_n$, given by $P_n \defeq D \tP_n$, with the same
+eigenvalues.  Here, $D_{ij} \defeq P_{0,i}^{1/2} \delta_{ij}$ is a diagonal matrix
+with $P_{0,i}^{1/2}$ along the diagonal.  In a vectorial notation, we can write $P_n
+= \tP_n P_0^{1/2}$, where $P_0$ is the equilibrium distribution, corresponding
+to the eigenvalue $\lambda_0 = 1$.
+% 
+We must have $P_{ii} \defeq 1-\sum_{j\neq i} P_{ij}$, but $S_{ii} =
+P_{ii}$, while the other entries of $S$ differ from those of $P$, so that in
+general 
+$P$ is a (column-)stochastic matrix but $S$ is  not.
+% (We do not use the Einstein summation convention in this paper.)
+The eigenvectors $\tP_n$ of $S$ are orthonormal with respect to the standard inner
+product.
+
+% Note that $P\transp$ acts on column vectors.
+% 
+% In this paper, we consider the case where the dynamics is given by the
+% Metropolis rule:
+% \begin{equation}
+%  P_{ij} = P_{i\to j} = \min\{1, \exp(-\beta \Delta H) \},
+% \end{equation}
+% where $\Delta H \defeq H_j - H_i$ is the energy change of the proposed move. 
+% This rule has the advantage that much is known about the metastability of spin
+% models under this rule; we will thus use such models, in their metastable
+% regimes, as our models of interest, rather than designing small transition
+% matrices to give certain phenomena, as was done in G+S 2006 PRE -- our
+% approach
+% is thus complementary.
+
+From the definition of the $P_n$ in terms of
+the
+$\tP_n$, we obtain
+\begin{equation}
+ C_n \defeq \frac{P_n}{P_0} = \frac{\tP_n}{\tP_0},
+\end{equation}
+which allows us to pass between the $C_n$ and 
+the eigenvectors of either $P$ or $S$.  It is in fact more convenient numerically
+to use $S$, due to numerical precision issues: the entries of $P_n$ are
+much smaller than those of $\tP_n$, due to the extra factor of $P_0^{1/2}$.
+
+% The $C_n$ are crucial in the study of metastability.
+
+
+% \section{Numerical method}
+% 
+% In \cite{LarraldeLeyvraz2005,LarraldeLeyvrazSandersJStatMech2006} it was shown
+% that metastable phases are given by probability distributions of the form...
+% The key to the structure of metastable phases is given by the functions
+% \begin{equation}\label{eq:defn-C-alpha}
+%  C_\alpha(\sigma) \defeq \frac{P_\alpha(\sigma)}{P_0(\sigma)}.
+% \end{equation}
+% In fact, these are the \emph{left} eigenvectors of $\LL \transp$, as
+% emphasised
+% in Gaveau \& Schulman.
+% 
+% In this paper, we numerically diagonalise the transition matrix $\LL$ for
+% small spin systems to obtain the dominant eigenvalues and their respective
+% eigenvectors. Since the transition matrix is sparse (having $N+1$ non-zero
+% entries in each row, in the case of Ising, for example), this can be done
+% using
+% the implicitly restarted Arnoldi method, provided in the ARPACK package REF.
+% method has a significant
+% numerical advantage over calculating directly the $P_n$ as the
+% eigenvectors of the non-symmetric matrix $\tP$, since although it still
+% involves divisions, the elements by which we must divide are larger than in
+% the
+% other case, so that we do not lose numerical accuracy so fast.  Furthermore,
+% since the equilibrium distribution is given by $P_0(\sigma)^{1/2}$, we can
+% reach smaller values of $P_0$ without overflowing double precision ($\sim
+% 10^{-16}$). 
+% 
+%  Note that in
+% \cite{StinchcombeNucleationtimesKineticIsingPRE2005}, it was implied that it
+% is
+% necessary to use the
+% symmetrised version to be able to numerically diagonalise large sparse
+% matrices.  In fact, this is not necessary, since the Arnoldi method is
+% available, which
+% generalises the Lanczos method to sparse non-symmetric matrices.  REFS
+
+% 
+% We could just find the right eigenvectors -- the $P_\alpha$, and divide them
+% to
+% find the $C_\alpha$.  But this is bad, since $P_0$ contains small numbers.  We
+% could just find the left eigenvectors, as in Gaveau+Schulman, but then we
+% can't
+% check that we have the correct $P_0$ and find the $Q_\alpha$.  Also we must
+% choose a normalisation which loses information -- since we showed that $C$
+% corresponds to a free energy difference -- check.
+% 
+%   We have found
+% that symmetrizing is the best solution: numerically better, since get
+% $P_0^{1/2}$ better, and can obtain all information: the $C_\alpha$ are still
+% ratios of the new eigenvectors $v_\alpha$. Note that for models satisfying
+% detailed balance, the right and left eigenvectors are in any case simply
+% related.
+% 
+% Stinchcombe says necessary to have symmetric, but this not true since Arnoldi
+% is like Lanczos and works for non-symmetric -- reduces to Lanczos for
+% symmetric.
+
+\subsection{Symmetry reduction}
+
+The numerical burden may be significantly reduced by using
+symmetry properties of the eigenvectors, as follows.
+
+\comment{Discussion of the symmetry reduction method here.}
+For
+Ising and Potts, we are interested in averaging over e.g.\ all configurations
+with one spin pointing in the opposite direction.  Thus we can simultaneously
+diagonalise the shift operator and $L$, obtaining eigenvectors of $L$ which are
+eigenvectors of the shift operator, i.e.\ are either constant in one direction,
+or have $e^{ikL}$-type factors.  The latter are excluded when we average over
+all shift-equivalent configurations, so that we then only need to look at
+eigenvectors which are shift-invariant.  Thus configurations which are
+shift-equivalent do not need to be separately considered, which reduces the
+workload.  In this way, a $5 \times 5$ lattice, which has $2^{25} \simeq 32
+\times 10^6$ configurations, is reduced to about $(32 / 5) \times 10^6$, i.e.\
+about $6 \times 10^6$, which \emph{may} be possible.  Note that $6 \times 6$
+may be possible with a supercomputer!  (It should be about $20$ times harder
+than $6\times 5$.) But it is really impossible to go beyond $6 \times 6$ using
+this kind of method. In any case, we are calculating a lot of detail that we
+are not really interested in.
+
+\comment{Is it just that we start from a symmetric state, so everything in the
+time evolution must remain symmetric?}
+
+A similar symmetry reduction was used previously by Nightingale et al.~
+\cite{NightingaleCorrelationTimesCriticalityPRB2000} for Ising
+models without
+field, and by Lundow et al.~in
+\cite{LundowCompressionTransferMatricesDiscMath2001} and
+\cite{LundowExactApproxCompressionTransferMatricesLMSJCM2008} for compressing
+transfer matrices in the context of combinatorics.
+
+
+
+% 
+% Note that for $\lambda$ close to $1$, say $\lambda = 1-x$ with $x \ll 1$, we
+% have $-1/\log(\lambda) = 1/(1-\lambda) + \Order{x^2}$.
+% 
+% Note that we suppress the dependence of eigenvectors and distributions on the
+% configuration $\sigma$ whenever possible, for clarity, so that equations such
+% as
+% these are in fact equations for vectors with $q^N$ components.
+% 
+% \subsection{Model}
+% 
+% Review of model
+% 
+% \subsection{Numerical method}
+
+
+\section{Single metastable phase: the Ising model}
+
+
+In this section, for the Ising model with a single metastable state, and in the next section, for the Potts model with multiple metastable states, we analyse the gross structure of the metastable states, in terms of the ``shape'' of the $P_n$ and $C_n$ corresponding to the slowly-decaying eigenvectors.
+% by considering different initial conditions $\sigma_0$, here and in the next section, 
+% structure of the eigenvector $P_1$ and of $C_1$. (Recall that $C_1(\sigma) =
+% P_1(\sigma) / P_0(\sigma)$.) 
+% In the following discussion, and the next section, we put the decay rate information,
+% corresponding to the eigen\emph{values} back into the theoretical description,
+% thereby obtaining information about the eigen\emph{vectors} and the $C_i$, and
+% hence about the ``structure'' of the metastable states.
+
+We start by reviewing the case of a single metastable phase, which was treated at
+length in \cite{LarraldeLeyvrazSandersJStatMech2006}. In that reference, some comparison
+with numerical results was carried out at a coarse-grained level.  Even in this simplest case, however, we are not aware of an extensive 
+numerical study of the structure of the eigenvectors, although Gaveau \& Schulman discussed the Ising model in 1D REF and a somewhat artificial model with multiple metastable states REF.
+
+We denote by $\zeros$, $\ones$, $\ldots$ the configurations with all spins in state $0$, $1$, $\ldots$ respectively.
+We suppose that there is a single slowly-decaying mode, so that $\lambda_1 \gg
+\lambda_2$, and we are in an Ising-type system described by the scheme $1 \to 0$.
+Thus we suppose that there is a metastable state concentrated around the configuration $\ones$, which decays after a time $T_1$ to the equilibrium state $\zeros$. Here we use the convention that the equilibrium state corresponds to
+$\zeros$;
+this is a change of notation from our previous work
+\cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007}.
+
+
+
+
+
+ Starting from an initial
+condition $\sigma_0$, for times $t$ such that $T_2 \ll t \ll T_1$, the system reaches a quasi-static distribution
+\begin{equation}
+ M \given \sigma_0 \simeq P_0 + C_1(\sigma_0) P_1.
+\label{eq:defn-M-ising}
+\end{equation}
+% is obtained, for times 
+% This is valid for times $t$ such that $T_2 \ll t \ll T_1$, for which all modes
+% $k \ge 2$ have decayed, but $\lambda_1^t$ is taken to be approximately $1$.
+% The distribution $ M \given \sigma_0$ is quasi-stationary for times $T_2 \ll t \ll T_1$.
+
+
+First, consider the initial condition $\sigma_0 = \zeros$. From there,
+we rapidly reach the equilibrium distribution $P_0$ , so that $M \given \zeros = P_0$, and so, from \eqref{eq:defn-M-ising}, we
+obtain $C_1(\zeros) \simeq 0$.
+% expected. 
+
+If instead we start from the initial condition $\sigma_0 = \ones$, then we
+rapidly reach a metastable distribution concentrated around $\ones$, given by
+\begin{equation}
+ M \given \ones = P_0 + C_1(\ones) P_1.
+\end{equation}
+Since $P_0$ is concentrated around $\zeros$, for $M \given \ones$ to be concentrated elsewhere, we must have that
+$P_1$ has a positive region concentrated around $\ones$, and that $C_1(\ones)$ is bounded away from $0$.
+The region where $P_0$ is positive and large, around $\zeros$, must also be counterbalanced by a corresponding  negative region of $P_1$.
+% We must thus have $C_1(\ones)$ bounded away from $0$. Furthermore, for this
+% distribution to
+% be concentrated near $\ones$, $P_1$  must cancel out the positive part of $P_0$
+% near
+% $\zeros$ with a negative value in that region. 
+Since furthermore $P_1$ satisfies
+$\sum_\sigma P_1(\sigma) = 0$, the negative region of $P_1$ around $\zeros$ and the positive region around $\ones$ must have equal and opposite strength; the height of $P_1$ in each of these regions is thus 
+approximately $1 / C_1(\ones)$.
+
+
+
+Furthermore, if we start from an initial condition $\sigma_0$ which is
+``close to'' $\ones$, i.e.\ which has almost all spins in state $1$, then there
+is a large probability that after the short equilibrium time we end up in state
+$1$. Thus for such initial conditions, $C_1(\sigma_0)$ is close to
+$C_1(\ones)$.  \comment{More detail needed and comparison with simulations.}
+
+
+In this way, by a simple analysis mixing analytical and intuitive ideas, we can
+rapidly derive the gross structure of the eigenvectors describing the
+metastable and equilibrium states.
+These calculations do not, however, reveal the detailed, fine structure of
+$P_1$ and $C_1$. As shown in \cite{LarraldeLeyvrazSandersJStatMech2006}, these
+are important since they determine the probabilities that each given initial
+condition will reach the metastable state or equilibrium:
+% In general, it was shown in \cite{LarraldeLeyvrazSandersJStatMech2006} that
+the
+value of $C_1(\sigma) / C_1(\ones)$ for a given $\sigma$ gives the probability
+of arriving at the metastable state concentrated around $\ones$. \comment{Need
+simulations to check this.}
+
+
+ \begin{figure}[htb]
+% \subfigure[]{\includegraphics[scale=0.6]{ising_4x4_beta_1.0_P0.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{ising_4x4_beta_1.0_P1.eps}}
+% \includegraphics{ising_4x4_beta_1.0_P.eps}
+\caption{Eigenvectors $P_i$ for the Ising model size $4 \times 4$, with  $\beta=1.0$.}
+% proportion
+% of configurations $\sigma$ with $C(\sigma)$ less than a given value of $C$.}
+\label{fig:ising-P}
+\end{figure}
+
+\begin{figure}[htb]
+% \includegraphics[scale=1]{ising_4x4_beta_1.0_C.eps}
+\caption{$C_1$ for the Ising model size $4 \times 4$, with  $\beta=1.0$.
+In all figures, configurations are enumerated along the $x$-axis in a
+lexicographic ordering.
+}
+% proportion
+% of configurations $\sigma$ with $C(\sigma)$ less than a given value of $C$.}
+\label{fig:ising-C}
+\end{figure}
+
+
+
+% 
+% \begin{figure}[htbp]
+% \scalefig{1}{ising_4x4_C1.eps}
+% \caption{Eigenvector $C_1(\sigma)$ for each configuration $\sigma$ for
+% the $4\times4$ Ising model with $\beta = 0.7$ and $h=0.5$.  The maximum of
+% $C_1$ occurs at the configuration $\zeros$, in the metastable state.}
+% \label{fig:ising-C1} 
+% \end{figure}
+% 
+\begin{figure}[htb]
+% \scalefig{0.7}{ising_4x4_C1_magn.eps}
+\caption{ The eigenvector of the previous figure, now plotted as a
+function of the magnetisation
+$M(\sigma) \defeq \sum_i \sigma_i$ of each configuration. 
+% (This is not the usual
+% Ising magnetisation,
+% but rather a lattice-gas-type magnetisation, since we are summing zeros and
+% ones, rather than ones and minus ones.)
+}
+\label{fig:ising-C1-fn-magn}
+\end{figure}
+
+\begin{figure}[htb]
+% \scalefig{1}{C1_sorted.eps}
+\caption{``Cumulative distribution'' of $C(\sigma)$, i.e.\ the
+proportion
+of configurations $\sigma$ with $C(\sigma)$ less than a given value of $C$.}
+\label{fig:ising-sorted}
+\end{figure}
+
+In metastable Ising models, $C_1$ always looks \emph{qualitatively} the same for
+different temperatures, $h$ etc.
+
+What is qualitative effect of changing system
+size?  For low temperature, it should be small by the following argument.
+Stinchcombe: at low temperature, the critical nuclei are known to be very
+small --  a pair of spins etc., as in Schonmann.  So it is
+possible for
+small systems, for example $5\times4$
+to contain the critical nucleus, and so give the qualitatively correct
+understanding of the metastable state.
+
+\comment{Check how things differ if we compare a regime where the critical droplet is
+very small, as in Stinchcombe, and one where it isn't (the case treated throughout -- magnetisation inversion, REF Rikvold.
+I expect that it will not make much difference?
+}
+
+% Note that $5\times4$ is about the limit of the method,
+% although
+% Stinchcombe does $6\times4$, and we should be able to do $5\times5$ with the
+% symmetry reduction. $6\times6$ will ``always'' be \emph{completely} out of
+% reach!
+
+What
+about the
+``observable representation'' of Gaveau \& Schulman, i.e.\ plotting $C_1$
+against $C_2$? What does it tell us?
+
+
+
+\section{Structure of the multiple metastable phases: results}
+In this section, we extend the study of the previous section to systems which possess 
+two metastable states with very different decay rates. The generalised
+Potts model developed in
+\cite{SandersLarraldeLeyvrazCompetitiveNucleationPottsPRB2007} makes it
+relatively easy to write down a model which has a given tree of metastable
+phases with given decay pathways and given relative decay rates.  This allows
+us to predict which phase the system is found in at each timescale.
+
+We assume that there are $K$ slowly-decaying eigenstates, giving rise to $K$
+metastable states.
+
+\comment{Comment on the difficulty of choosing the parameters so that $\P_0$ is not too small, 
+but so that we do see the effect (i.e.\ there are long-lived metastable phases).
+
+There seems to be a crossover where the bottom half of the $C$'s becomes the top half (i.e.\ becomes
+larger in size.
+}
+
+\subsection{Linear succession of phases}
+We begin by considering a linear succession of phases, with decay times
+ $1 \sim T_3 \ll T_2 \ll T_1$.
+ The Potts models that we consider are designed such that 
+all metastable and equilibrium states (probability distributions) are strongly
+concentrated on one of
+$\zeros$, $\ones$ or $\twos$.
+Thus the equilibrium distribution $P_0$ is positive everywhere, is
+large around $\zeros$, and is small everywhere else.
+
+
+Within this context, there are two possible scenarios, which
+ depend on the relative decay rates of the
+two transitions $2 \to 1$ and $1 \to 0$. 
+We may indicate the speed of decay graphically using the \emph{length} of these arrows, with 
+a longer arrow corresponding to a larger difference in values of the external fields between the two states, and hence to a 
+\emph{faster} decay.
+% arrow leading to a state corresponds to the value of the external field
+% corresponding to that state. A larger value of this field, or a longer arrow,
+% means that that decay happens faster.
+
+The analysis, as in the previous section, proceeds by studying the sequence of states $\M{k} \given \sigma_0$
+over time, as the different eigenvectors decay, for different initial conditions
+$\sigma_0$.
+We denote by $Q_n$ the distribution concentrated around ``all
+$n$s'', e.g.\ $Q_1$ is the metastable distribution concentrated near $\ones$, while $Q_0 =
+P_0$ is the equilibrium distribution.  This is in agreement (???) with the
+notation of \cite{LarraldeLeyvrazSandersJStatMech2006}.
+
+
+
+\subsubsection{Slow decay followed by fast decay}
+
+Consider first the case $2 \rightarrow 1 \longrightarrow 0$.
+This denotes a three-state system with two metastable states. 
+Starting from the metastable state around $\twos$, there is a slow decay to $\ones$, on time scale $T_1$, and starting in
+$\ones$ there is a fast decay to the equilibrium state $\zeros$, on time scale $T_2$.  
+We emphasise that here ``fast'' and ``slow'' are relative: both are slow
+timescales compared to the timescales $T_i$ for $i>3$, but $T_1 \gg T_2$.
+
+In fact, starting from the state $\twos$, we will see the system ``equilibrate'' in the state $\ones$ only if we happen to look at the right moment, since there is no well-defined time scale at which we can observe the system and be guaranteed that it will be in $\ones$. Any given run may remain in $\ones$ for some time, but statistically, averaged over many different ones, we are unable to identify the relevant timescale, and by the time we are sure that
+the metastable state $\twos$ has decayed, the system has already also passed
+through $\ones$ to $\zeros$. We must thus regard $\twos$ as decaying  straight to $\zeros$.
+Nonetheless, if we start in $\ones$, we observe an
+Ising-type metastable state which decays to the equilibrium state $\zeros$
+after a certain, distinct, time scale. This reflects the fact that different metastable
+states are relevant at different timescales. 
+
+% It is physically clear that
+% both $\zeros$ and $\ones$ are thus metastable states, whereas $\twos$
+% is the equilibrium state.
+%
+% where starting in $\zeros$, the system decays slowly to $\ones$, and
+% from
+% there rapidly to $\twos$.
+We proceed to extract the consequences of this physical
+intuition.
+Suppose that we start in the initial condition $\sigma_0 =
+\ones$. After a short equilibration time  $T_3 \ll t \ll T_2$, the system is in the
+metastable state given by the quasi-static
+probability distribution  concentrated near $\ones$:
+\begin{equation}
+ \M{2} \given \ones \simeq P_0 + C_1(\ones) P_1 + C_2(\ones) P_2 = Q_1.
+ \label{eq:M2-ones}
+\end{equation}
+% which must thus 
+% be concentrated on the metastable state around $\ones$.
+
+For times $t$ such that $T_2 \ll t \ll T_1$, the contribution of $P_2$ 
+decays, giving the new state
+\begin{equation}
+ \M{1} \given \ones \simeq P_0 + C_1(\ones) P_1.
+\end{equation}
+But for $t \gg T_2$, starting from $\ones$, we have already reached the
+equilibrium distribution, so that in fact $\M{1} \given \ones \simeq P_0$, and
+hence $C_1(\ones) \simeq 0$. 
+
+Substituting this back in \eqref{eq:M2-ones} shows that
+% The metastable state $\M{2} \given \ones$ is thus given by
+\begin{equation}
+ \M{2} \given \ones \simeq P_0 + C_2(\ones) P_2 \simeq Q_1.
+\end{equation}
+This is the same situation found in the Ising model with a single metastable state discussed in the previous section, and so the same conclusions hold: $C_2$ has a maximum at $\ones$, and $P_2$ has positive and negative regions of equal strength, concentrated near $\ones$ and $\zeros$, respectively.  FIG confirms that this is observed numerically.
+% 
+% Since this is concentrated near $\ones$, 
+% we see that
+% $C_2$ must have a single maximum value at $\sigma = \ones$, since $P_0$ is
+% concentrated around $\zeros$ and is very small around $\ones$.
+% 
+% We can use this information to draw conclusions about the shape of the
+% eigenvectors $P_i$, as follows.
+% Since $P_2$ is not everywhere zero (since $\M{2} \given \ones$ is concentrated
+% near $\ones$, where $P_0$ is zero), and since
+% $\sum_{\tau} P_2(\tau) = 0$, there must be a region where $P_2$ is negative. 
+% But $\M{2} \given \ones$ is everywhere positive, so that the negative region of
+% $P_2$ must
+% counterbalance the positive region of $P_0$ around
+% $\zeros$.  The positive region of $P_2$ must then be concentrated around
+% $\ones$ in order that $\M{2} \given \ones$ is concentrated there.  In this way,
+% we
+% establish the principal structure of $P_2$. FIG
+
+ Starting instead from $\sigma_0 = \twos$, 
+after a short equilibration time we reach the quasi-static distribution
+\begin{equation}
+ \M{2} \given \twos \simeq P_0 + C_1(\twos) P_1 + C_2(\twos) P_2 \simeq Q_2,
+\end{equation}
+concentrated around $\twos$.
+After a time $T_1 \gg t \gg T_2$, the contribution from $P_2$ decays,
+but the system is still in the same metastable state, concentrated
+around
+$\twos$, since this metastable
+state decays only for times $t \gg T_1$.
+Thus
+\begin{equation}
+  \M{1} \given \twos \simeq P_0 + C_1(\twos) P_1 \simeq Q_2 \simeq \M{2} \given \twos,
+\end{equation}
+so that we must have $C_2(\twos) \simeq 0$.  
+
+Once again, we have the same structure as in the Ising model, so that 
+$P_1$ has a negative region around $\zeros$
+and a 
+positive region of equal strength around $\twos$, as confirmed in FIG.
+
+% Note that this was used in a
+% crucial way in \cite{BovierCMP2002}.
+
+We thus find that we have two situations of the same type as the
+Ising model studied previously: each metastable state has a $C_i$ with a single
+maximum concentrated on the relevant representative configuration.  Effectively,
+we have two \emph{independent} Ising-like metastable states, both decaying -- albeit on different
+time scales -- directly to equilibrium.
+
+
+\begin{figure}[htb]
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P0.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P1.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P2.eps}}
+% \includegraphics{potts_slow_fast_3x3_beta_1.2_P.eps}
+\caption{Eigenvectors $P_i$ for the Potts model with slow then fast decay, $\beta=1.2$, in a $3 \times 3$ lattice.
+\comment{Add all parameter values and decay times to all figure captions.}}
+\label{fig:potts-slow-fast-P}
+\end{figure}
+
+ \begin{figure}[htb]
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P0.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P1.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P2.eps}}
+% \includegraphics{potts_slow_fast_3x3_beta_1.2_C.eps}
+\caption{$C_i$ for the Potts model with slow then fast decay, $\beta=1.2$, in a $3 \times 3$ lattice.}
+\label{fig:potts-slow-fast-C}
+\end{figure}
+
+
+\subsubsection{Fast decay followed by slow decay}
+
+
+We now turn to the case $2 \longrightarrow 1 \rightarrow 0$, in which
+ $\twos$
+decays fast to $\ones$, which in turn decays slowly to the equilibrium
+state $\zeros$. This is qualitatively different from the previous case, since
+starting from state $\twos$, the system passes through a succession of three
+visible states at different timescales, whereas in the previous case only two
+states were (statistically) visible.
+
+Let us start by considering the initial condition
+$\sigma_0 = \ones$. After a short equilibration time, we reach
+the metastable distribution
+\begin{equation}
+ \M{2} \given \ones \simeq P_0 + C_1(\ones) P_1 + C_2(\ones) P_2 \simeq Q_1,
+\end{equation}
+concentrated around $\ones$.
+After a time $T_1 \gg t \gg T_2$, the contribution from $P_2$  decays, but
+the system \emph{remains} in the metastable state concentrated around $\ones$,
+since the decay of that state is governed by the longer timescale $T_1$.
+Thus
+\begin{equation}
+\label{eq:M1-given-ones}
+ \M{1} \given \ones \simeq P_0 + C_1(\ones) P_1 \simeq Q_1 \simeq  \M{2} \given \ones,
+\end{equation}
+so that $C_2(\ones) \simeq 0$. Thus once again,  the metastable
+state again is of Ising type, with $P_1$ having a
+negative
+region at $\zeros$ and a counterbalancing positive region at $\ones$; see FIG.
+
+If, however, we instead start from $\sigma_0 = \twos$, then after a short
+equilibration time, we reach the metastable distribution
+\begin{equation}
+\label{eq:m2-given-twos}
+\M{2} \given \twos \simeq P_0 + C_1(\twos) P_1 + C_2(\twos) P_2 \simeq Q_2,
+\end{equation}
+concentrated near $\twos$.
+After a time $T_1 \gg t \gg T_2$, the contribution from $P_2$
+decays, and the system moves to the \emph{different} metastable state,
+\begin{equation}
+\label{eq:m1-given-twos}
+ \M{1} \given \twos \simeq P_0 + C_1(\twos) P_1 \simeq Q_1,
+\end{equation}
+concentrated near $\ones$.
+But comparing this with equation \eqref{eq:M1-given-ones}, we see that this metastable distribution $Q_1$
+concentrated on $\ones$ is also 
+% physically the same as $\M{1}
+% \given \ones$, 
+obtained by starting from $\ones$, i.e.\ $\M{1}
+\given
+\twos = \M{1} \given \ones$, and hence 
+\begin{equation}
+ C_1(\twos) \simeq C_1(\ones).
+\end{equation}
+Thus the structure of $C_1$ is now very different: it no longer describes an
+Ising-like state; rather, it is concentrated roughly equally on two very
+different parts
+of configuration space, namely the two regions corresponding to the two disjoint
+metastable states.
+
+
+We can also derive from \eqref{eq:m1-given-twos} that $P_1$ has a negative
+region around the equilibrium region $\zeros$ and a positive region
+of equal strength around $\ones$.  From \eqref{eq:m2-given-twos}, we then see that $P_2$ must
+have a negative region near $\ones$ and a positive region of equal strength near
+$\twos$, and that $C_2(\twos)$ is non-zero.  Thus, whereas $C_2$
+again has an Ising-like structure, concentrated on $\twos$,
+$C_1$ has a completely different structure; see FIG.This
+latter
+possibility was overlooked in
+\cite{LarraldeLeyvrazSandersJStatMech2006}.
+Indeed, the maximum values of $C_1$ and $C_2$ are numerically found to occur both near $\twos$???  
+
+This result does not seem to us very intuitive, in the sense that $C_2$, which
+in some
+sense corresponds to the metastable state concentrated on $\twos$, does not
+contain any information that it will decay to $\ones$ rather than to
+equilibrium -- 
+it ``looks like'' it were an Ising-like metastable state which will
+decay to equilibrium.  
+Rather it is $P_2$ itself which contains this information, since its negative
+region concentrated around $\ones$ implies the necessity of another
+metastable state to counterbalance this negative region.  
+
+On the other hand, $C_1$ unexpectedly has extra structure, which can be viewed as corresponding, in some
+sense, to the fact that it  \emph{receives} input from the decay of the
+metastable state $\twos$.
+
+
+
+
+ \begin{figure}[htb]
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P0.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P1.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P2.eps}}
+% \includegraphics{potts_fast_slow_3x3_beta_1.2_P.eps}
+\caption{Eigenvectors $P_i$ for the Potts model with fast then slow decay, $\beta=1.2$, in a $3 \times 3$ lattice.}
+\label{fig:potts-fast-slow-P}
+\end{figure}
+
+ \begin{figure}[htb]
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P0.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P1.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P2.eps}}
+% \includegraphics{potts_fast_slow_3x3_beta_1.2_C.eps}
+\caption{$C_i$ for the Potts model with fast then slow decay, $\beta=1.2$, in a $3 \times 3$ lattice.}
+\label{fig:potts-fast-slow-C}
+\end{figure}
+
+\subsubsection{Succession of 4 phases}
+We extend the results of the previous section to a linear succession of four
+phases, such that the decay times increase as we approach equilibrium.
+
+
+ \begin{figure}[htb]
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P0.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P1.eps}}
+% \subfigure[]{\includegraphics[scale=0.6]{potts_3x3_beta_1.2_P2.eps}}
+% \includegraphics{potts_succession_q4_3x3_beta_1.5_P.eps}
+\caption{Eigenvectors $P_i$ for the Potts model with a linear succession of $4$ phases, $\beta=1.5$, in a $3 \times 3$ lattice.}
+\label{fig:potts-succession-four-P}
+\end{figure}
+
+
+
+% \subsubsection{Competitive nucleation}
+
+% \section{Generalised Potts model with multiple metastable phases}
+
+% 
+% Number of evals near $1$ corresponds to number of metastable phases. Mean time
+% to go from one to another corresponds (roughly) to $1/(1-\lambda)$, $\lambda$
+% the corresponding eigenvalue.  In particular in the case where $1$ can decay
+% to
+% $2$ and $3$, there will be a very slow decay from $2$ to $3$ if $h_3 > h_2$. 
+% How does this decay rate depend on $\delta \defeq h_3-h_2$?  That is for a
+% given set of $J's$.  How depends on $J$?  Basically this is an Ising model
+% now!
+%  (So we know the answer?)
+% 
+% Find good parameters such that the two phases are really metastable: low $T$
+% and
+% large $h$?
+% 
+% Can I do with 4 spin states and 3 metastable phases?  For a $3 \times 3$
+% system,
+% we have
+% $4^9 \simeq 2\times 10^5$ microstates, so this should be feasible.  Maybe even
+% can do $4 \times 3$ using
+% the symmetry reduction.
+
+% \begin{figure}
+% \scalefig{0.6}{potts-succession-C1.eps}
+% \hfill
+% \scalefig{0.6}{potts-succession-C2.eps}
+% \caption{ $C_1$ and $C_2$ for Potts model with succession of metastable
+% states and eigenvalues $\lambda_1 = 0.999817$, $\lambda_2 =
+% 0.99953$. The maxima of $C_1$ and $C_2$ occur at $\zeros$ and $\ones$,
+% respectively, which correspond to the metastable states with longest and
+% shortest lifetimes, in accordance with the theory. \textbf{This doesn't seem
+% to be true for all values of parameters though!  }}
+% \label{fig:potts-succession-C1-C2}
+% \end{figure}
+
+% Note that the negative part
+% of $C_2$ looks like $C_1$ upside down -- must explain this!  When the two
+% metastable lifetimes get even closer, this part actually dominates, so that
+% both $C_1$ and $C_2$ have maxima at $\zeros$ -- \textbf{THIS CONTRADICTS THE
+% THEORY!!!!}
+
+It is tricky to find good parameters for which the numerical calculation does
+not overflow standard double precision.
+
+Using forward-flux sampling, we can actually calculate \emph{all} the transition
+rates
+between different states (forward and back).
+
+Problem: need to have $h_\alpha$ very separated since such a small system and
+want the probability to find each state in equilibrium to be small.
+
+Can we get up to $4 \times 4$, which is a ``reasonable''
+system size (interactions start being local, not global)?
+
+As $h_3$ crosses from being greater than $h_2$ to being less than it, the
+stability of the metastable states crosses over.  Can we see this?  Funny
+effect near the crossover.
+
+% Theory works only when the slowest state is state $0$, i.e.\ the one
+% which decays?  How can we get around this problem?  Is there any information
+% about which state will decay to?
+
+Check that the $C$s still correspond to free energy differences.
+
+% 
+% \subsection{Wang--Landau approach}
+% 
+% Can we extend this?  I doubt it, since no access to different $C_\alpha$??
+% Draw
+% free energy graphs as function of magnetisations?
+
+\section{Kawasaki dynamics: Ising model / lattice gas with conserved
+magnetisation}
+
+\comment{Does this section belong in the paper?  It's an interesting(?) example
+where there are slow 'hydrodynamic'(?) modes which do not give metastability (in our terminology).
+}
+
+
+
+If we fix the magnetisation in the Ising model, we have qualitatively different
+behaviour.  Here we investigate the properties of eigenvalues and eigenvectors
+for standard Kawasaki dynamics, where neighbouring spins are \emph{swapped},
+rather than flipped.
+
+In this case, we find very different behaviour from the Ising model with
+non-conserved magnetisation and spin-flip dynamics.
+
+\begin{figure}
+% \scalefig{0.7}{kawasaki-evecs-1-to-4.eps} \hfill
+% \scalefig{0.7}{kawasaki-evecs-5-to-7.eps}
+\caption{(a) Eigenvectors $C_1$ to $C_4$ for Kawasaki dynamics on a
+$4\times4$ lattice with $\beta=0.8$ and density $\rho = 0.5$. (b) Eigenvectors
+$C_5$ to $C_7$ for Kawasaki dynamics on a
+$4\times4$ lattice with $\beta=0.8$ and density $\rho = 0.5$. }
+\label{fig:kawasaki-C1to4}
+\end{figure}
+
+
+Each of the first four eigenvectors has a maximum at a minimum energy stripe
+configuration and
+a minimum of the same depth at its ``opposite'', obtained by reversing all
+spins. The other considerable values occur at the other stripe configurations.
+We can (?) interpret these modes as ``flip-all-spins'' modes -- these are the
+processes with the longest lifetimes in the system.  Note that the numerical
+method is not good enough to obtain the exact symmetry that we know exists,
+i.e.\ that any shift should give an equivalent eigenvector.
+
+% 
+% \begin{figure}[htb]
+% \scalefig{0.5}{kawasaki-evecs-5-to-7.eps}
+% \caption{Eigenvectors $C_5$ to $C_7$ for Kawasaki dynamics on a
+% $4\times4$ lattice with $\beta=0.8$ and density $\rho = 0.5$.}
+% \label{fig:kawasaki-C5to7}
+% \end{figure}
+
+The next three eigenvectors each have two maxima and two minima.  The two
+maxima are inverses of each other, as are the two minima.  To go from a maximum
+to a minimum
+
+
+% \begin{figure}[htb]
+% \scalefig{0.7}{kawasaki-evals.eps}
+% \caption{Eigenvalues, ordered by size, for Kawasaki dynamics, with
+% same parameters as in previous figure. }
+% \label{fig:kawasaki-evals} 
+% \end{figure}
+
+
+Each symmetry corresponds to repeated eigenvalues with eigenvectors which are
+permutations -- give proof.
+
+These results describe what we have previously called a hydrodynamic mode (?). 
+Here we have multi-stability (not metastability
+in the sense we have been using it): i.e.\
+states with the same stability, between which the system moves on
+long time-scales.  In particular, the configurations with large values of $C_i$
+also have large values of $\Peq$, so they are not metastable in the sense that
+we have been using.
+% 
+% \section{Spin glass}
+% Try $\pm J$ Ising spin glass.  Would like to ``draw'' energy landscape, but
+% there are too many dimensions.  How many minima are there?
+
+\section{Conclusions}
+
+We have shown that it is possible to understand the gross structure, and some of the fine structure, of the eigenvectors which describe metastable states in Markov processes satisfying detailed balance with eigenvalues close to $1$.  Simulations of small Ising- and Potts-type spin models enabled us to verify our theoretical predictions numerically. Nonetheless, much remains to be understood, particularly in the case where the eigenvalues are not well-separated, for example in spin glasses REF Schulman.
+
+
+\appendix
+\section{Symmetry reduction of transition matrix}
+
+
+In this section, we show that lattice symmetries 
+allow us to considerably reduce the numerical effort required to extract the
+eigenvalues and eigenvectors which are of interest to describe metastability.
+
+
+\subsection{Symmetry group of the lattice}
+
+An $L_x \times L_y$ rectangular lattice with periodic boundary
+conditions is invariant under a symmetry group $G$, consisting of all
+translations by lattice vectors together, together with elements of the 
+symmetry group of the square or rectangle, given by 
+$\Pi_h$ and $\Pi_v$ for a rectangle, 
+or $\Pi$ together with a rotation $R$ by $\pi/2$ if the lattice is 
+square (i.e.\ if $L_x = L_y$).  
+% In fact the group is a semi-direct product of
+% the translation group with the symmetry group of the square or rectangle.
+
+The order (i.e.\ number of elements) of the group $G$ is thus
+$\size{G} = 4N$ for a rectangular lattice, and
+$\size{G} = 8N$ for a square lattice, where $N = L_x L_y$ is
+the number of spins in the lattice.
+
+As shown previously, the metastable states of interest have their structure
+described by the eigenvectors corresponding to eigenvalues $\lambda$ such that
+$1-\lambda \ll 1$. Such eigenvectors $\v$  have the following symmetry property:
+for any symmetry $g \in G$ of the
+lattice, we have $v(g(\sigma)) = v(\sigma)$
+ for all $\sigma \in \Gamma$.
+This is due to the fact that we start from a symmetric initial
+condition, for example $\zeros$, invariant under any symmetry operation $g
+\in G$.
+So the probability distribution at any time $t$ is also invariant under the group.
+Furthermore, the states of interest are also invariant under any symmetry
+operation, e.g. the metastable state concentrated around any of $\zeros$,
+$\ones$ or $\twos$.
+
+It is thus useful to divide the configuration space $\Gamma$ into group orbits,
+or equivalence classes, $\equivclass{\sigma} \defeq G \cdot \sigma 
+\defeq \set{g\cdot \sigma: g \in G}$, where $g \cdot \sigma$ denotes the
+action of the group element $g$ on the configuration $\sigma$. 
+The eigenvectors of interest are constant on such equivalence classes, so that
+it is sufficient to evaluate them for one representative of each equivalence
+class.  
+These equivalence classes form a partition of $\Gamma$;  we denote them by
+$\class_i$, $i=1,\ldots,$ (where $K$ is the total number of classes), and
+let
+$\ts_i$ be a chosen representative of class $i$.  \textbf{Need to change
+notation since $K$ is the number of metastable states.}
+
+\subsection{Symmetry reduction}
+
+If we are interested only in eigenvectors which are symmetric in the above
+sense, then it turns out that it is sufficient to use a symmetry-reduced
+version $\tL$ of $L$, in which each entry corresponds to a block of $L$
+relating configurations in different equivalence classes.  
+This is worthwhile, since 
+for a square and a rectangular (non-square) lattice, the size of the
+matrix to be diagonalised reduces by a factor of roughly $8N$ and $4N$,
+respectively, where $N$ is the number of spins.
+
+For example, a $5 \times 5$ Ising model has $2^25 \simeq 3 \times 10^6$
+configurations. The symmetry reduction reduces this to $1.7 \times 10^5$. 
+The former size is not really accessible, whereas the latter is 
+feasible.  Of course, these methods will in any case only allow us to reach 
+a $6 \times 6$ lattice on a supercomputer.  To analyse larger
+systems, a method is required which does not attempt to calculate everything in
+detail -- in any case, we are not really interested in all the detail.
+
+We now present the
+details of the symmetry reduction.
+% 
+%Grouping the configurations $\sigma$ belonging to the same orbit causes
+%the transition matrix $\LL$ to take a block form.  
+%Denote by $\size{G\sigma}
+%\defeq \size{\equivclass{\sigma}}$ the order of the orbit of the 
+%configuration $\sigma$ under the action of the symmetry group $G$.  Then $\LL$
+%splits into blocks $L_{\equivclass{\sigma} \to \equivclass{\sigma'}}$ of size
+%$\size{G\sigma} \times \size{G\sigma'}$.  Each row of such a block is a
+%permutation of the first row.
+% 
+%The eigenvector equation for $\LL$ takes the form ..., which implies ... for
+%the
+%reduced matrix $\tL$ and its reduced eigenvector $\tv$.
+% 
+We consider the eigenvector equation
+\begin{equation} \label{eq:eigenvector}
+\LL%\transp 
+\vv = \lambda \vv
+\end{equation}
+for a $\v$ which satisfies the symmetry condition $v_{g(\sigma)} =
+v_{\sigma}$ for all  configurations $\sigma$ and all group elements $g \in G$.
+Grouping
+configurations into their symmetry
+equivalence classes, we have
+%\begin{align}
+% \end{align}
+\begin{equation} \label{eq:split-equiv-classes}
+  (\LL %\transp 
+\vv)_{\sigma} = \sum_{\tau} \L{\sigma}{\tau} \v{\tau} \\
+= \sum_i \sum_{\tau \in \class_i} \L{\sigma}{\tau} \v{\tau} \\
+= \sum_i \tv_i \sum_{\tau \in \class_i} \L{\sigma}{\tau},
+\end{equation}
+where $\tv_i$ is the common value of $v$ in the class $\class_i$.
+
+Since the LHS of equation \eqref{eq:split-equiv-classes} is equal to $\lambda
+\v{\sigma}$, which is independent of the configuration within a given 
+equivalence class, the rest of the equation must also take constant values for
+all $\sigma$ in a given class.  We can show this explicitly as follows.  Let
+$\tG_i$ be a (minimal) set
+of elements of $G$ of size $\size{\class_i}$ such that $\class_i = \tG_i \ts_i$,
+i.e.\ such that $\tG_i$ acting on $\ts_i$ gives exactly its orbit.
+\comment{This quantity does not appear to have a name or standard notation?}
+Then
+\begin{equation}
+\sum_{\tau \in \class_i} \L{\tau}{\sigma} = \sum_{g \in \tG_i} \L{g\cdot \ts_i}
+{\sigma}
+= \frac{1}{\size{G}/\size{G \ts_i}} \sum_{g \in G} \L{g\cdot \ts_i}{\sigma},
+\end{equation}
+where we have replaced the sum over the elements of the orbit by a sum
+over the whole group.
+But by the symmetry of $\LL$, for any $g' \in G$ this is equal to
+\begin{align}
+&= \frac{1}{\size{G}/\size{G \ts_i}} \sum_{g \in G} 
+\L{g'g\cdot \ts_i} {g' \cdot \sigma} \\
+&= \frac{1}{\size{G}/\size{G \ts_i}} \sum_{g'' \in G} 
+\L{g''\cdot \ts_i}{g' \cdot \sigma},
+\end{align}
+since if $g$ traverses the group $G$, then so does $g'' \defeq g'g$.
+Thus
+\begin{equation}
+\sum_{\tau \in \class_i} \L{\tau}{\sigma} = \sum_{\tau \in \class_i}
+\L{\tau}{g' \cdot \sigma}
+\end{equation}
+for any $g' \in G$, so that this quantity is indeed independent of the
+equivalence class of $\sigma$.
+
+Defining
+\begin{equation} \label{eq:definition-reduced-matrix}
+\tL_{i,j} \defeq \sum_{\tau \in \class_j} \L{\sigma}{\tau}
+\end{equation}
+for any $\sigma \in \class_i$,
+we thus conclude that 
+\begin{equation}
+(\LL %\transp 
+\vv)_{\sigma} = \sum_j \tL_{i,j} \tv_j = (\tL %\transp 
+\tvv)_{i}.
+\end{equation}
+Note that we must sum over \emph{departing} states.
+
+We hence finally obtain the desired symmetry-reduced eigenvector equation:
+ \begin{equation} \label{eq:reduced-eigenvector}
+\tL %\transp 
+\tvv = \lambda \tvv,
+\end{equation}
+which contains exactly the same information as the original eigenvector
+equation \eqref{eq:eigenvector}, \emph{provided} that $\vv$ satisfies the
+symmetry condition.  In fact, the equation \eqref{eq:reduced-eigenvector} gives
+\emph{exactly} the symmetric eigenvectors of the original transition
+matrix, with their corresponding eigenvalues.  There are thus exactly $K$ such
+symmetric eigenvectors.
+We remark that the normalisation of the reduced vectors
+$\tv$ is different from that of the original vectors $\v$, since
+\begin{equation}
+ \vv \cdot \w = \sum_{\sigma} v_{\sigma} w_{\sigma} = \sum_i n_i \tv_i
+\tilde{w}_i,
+\end{equation}
+where $n_i \defeq \size{\class_i}$ is the number of configurations in the $i$th
+equivalence class. Nonetheless, we do not explicitly use this result in the
+simulations, since once the reduced eigenvectors have been calculated, we
+immediately reconstruct the full eigenvectors before proceeding with the
+calculation.
+
+% 
+% 
+% Note that the symmetry-reduced matrix is no longer symmetric, so that it is
+% obligatory to use the non-symmetric Arnoldi method, rather than the symmetric
+% Lanczos method.
+
+The reason that this symmetry reduction is useful is because the
+states (probability distributions) that we are interested in \emph{are}
+symmetric under all the symmetry group operations, \comment{basically because
+we start from a symmetric initial condition?}. This is not the case, for
+example, in the case of Kawasaki dynamics.  We can view the symmetry reduction
+as the $k=0$ case of some kind of representation. \comment{Details needed!}
+
+Just as in the non-symmetry-reduced case, it is possible to make a symmetric
+version of the reduced transition matrix (although in fact we did not use this
+in the numerical calculations).
+To do so, we begin from  \eqref{eq:definition-reduced-matrix}:
+\begin{equation}
+\tL_{i,j} = \sum_{\tau \in \class_j} \L{\sigma}{\tau},
+\end{equation}
+for any $\sigma \in \class_i$.  We can thus sum over all such $\sigma$ to
+obtain
+\begin{equation}
+\tL_{i,j} = \frac{1}{
+%\size{\class_i}
+n_i} \sum_{\sigma \in \class_i} \sum_{\tau \in
+\class_j} \L{\sigma}{\tau}.
+\end{equation}
+Reversing the indices gives
+\begin{equation}
+% \tL_{j,i} = \frac{\size{\class_j}}{\size{\class_i}} \tL_{i,j},
+\tL_{j,i} = \frac{n_i}{n_j} \tL_{i,j},
+\end{equation}
+provided that $\tL$ is defined starting from the symmetric version of the
+transition
+matrix.
+Finally, by analogy with the passage from the original to the symmetric
+transition matrix, we define
+\begin{equation}
+\tS_{i,j} = n_i^{1/2} \tL_{i,j} n_j^{-1/2},
+\end{equation}
+% obtaining $\tS_{i,j} = \tS_{j,i}$, and 
+to obtain a symmetric version of the
+reduced
+transition matrix.
+
+% \comment{Also need to worry about inner product and normalisation of
+% eigenvectors. Since the matrix is symmetric, they should be orthonormal with
+% respect to the \emph{standard} inner product.}
+
+
+
+
+ 
+\subsection{Computational implementation}
+Here we give a description of the computational implementation of the symmetry
+reduction. Each configuration $\sigma$ belongs to an equivalence class
+$\class_i$. 
+
+Firstly, a list of \emph{representative configurations} $\tau_i$ is
+generated, one for each symmetry equivalence class, as follows.
+Each configuration is assigned an index number, for example using lexicographic
+ordering.
+The set of configurations is traversed in order.  Each configuration is checked
+to make
+sure that it has not been previously generated.
+If it is a new configuration, then it is added to the list of representatives,
+and all the configurations in its orbit under the symmetry group of the
+lattice are assigned this representative.
+
+Once the representative list has been found, the symmetry-reduced
+sparse transition matrix is created. From each representative configuration,
+the new configurations which are adjacent to it, in the sense that there are
+transitions possible between them and the representative, are found. In turn,
+the representatives for these configurations are found, and the sum in eq.~???
+is carried out to find the value in the reduced matrix.  Note that the case of
+transitions from one class to itself is special: its value is
+$\tL{\sigma}{\sigma} = 1-\sum_{\tau \neq \sigma} \L{\tau}{\sigma}$, i.e.\ the
+sum is over the other index. This case must thus be treated specially.  In the
+case that the base matrix is symmetric, which we desire, the
+$\L{\sigma}{\sigma}$ must furthermore be as above.
+
+The list of representatives depends only on the number of spin states $q$ and
+on the size $L_x \times L_y$, but not on the details of fields and
+interactions, so it can be stored for reuse to save some time. With more work,
+the interaction matrix could also be stored: each entry is a linear combination
+of a restricted number of transition probabilities, due to the small number of
+possible values of $\Delta H$ \cite{NewmanBarkemaBook}.
+Of course, for large system sizes, the sparse-matrix diagonalisation is always
+the most time-consuming part of the calculation.
+
+
+%\bibliographystyle{apsrev}
+%\bibliography{../ising}
+
+
+\bibliographystyle{unsrt}
+\bibliography{../ising}
+
+
+\end{document}
