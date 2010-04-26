@@ -1,0 +1,18 @@
+# Parameters for Potts model with 2->1-->0,
+# i.e. 2 decays slowly to 1, which decays fast to 0
+# Starting from 2, there is thus no visible fast timescale
+
+# Number of spin types q:
+3
+
+# List of values of fields of each type: first column is type, second is value
+2	0.0
+1	0.2
+0	0.8
+
+# List of interactions other than Potts type. (Can override Potts ones too.)
+# First two columns give the spin types of the interaction; the third column is the new value
+
+2 1		-0.3
+1 0		-0.3
+2 0		-2

@@ -1,0 +1,12 @@
+# Parameters for Ising model
+
+# q = 2:
+2
+
+# Give list of field values: first column is number of field, second is value
+0	1.0
+1	0.0
+
+# Give list of interactions other than Potts type. (Can override Potts ones too)
+# First two columns give the spin types of the interaction; the third column is the new value
+0 1		-1.0

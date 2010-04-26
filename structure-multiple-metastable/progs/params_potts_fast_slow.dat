@@ -1,0 +1,17 @@
+# Parameters for Potts model with 2-->1->0,
+# i.e. 2 decays to 1 fast, then 1 decays to 0 slowly
+
+# Number of spin types q:
+3
+
+# List of values of fields of each type: first column is type, second is value
+2	0.0
+1	0.7
+0	1.0
+
+# List of interactions other than Potts type. (Can override Potts ones too.)
+# First two columns give the spin types of the interaction; the third column is the new value
+
+2 1		0.1
+1 0		0.1
+2 0		-1
